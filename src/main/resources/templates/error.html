@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Error</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="text-center py-5">
+        <h1 class="display-1 text-danger">Oops!</h1>
+        <h2 class="mb-4">Something went wrong.</h2>
+        <div class="alert alert-danger d-inline-block text-start" th:if="${error}">
+            <strong>Error Details:</strong>
+            <p class="mb-0" th:text="${error}"></p>
+        </div>
+        <div class="mt-4">
+            <a th:href="@{/}" class="btn btn-primary btn-lg">Back to Home</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

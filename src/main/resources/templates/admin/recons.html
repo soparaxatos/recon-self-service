@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Manage Recons</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Manage Recons</h1>
+        <a th:href="@{/admin/recons/new}" class="btn btn-success">Create New Recon</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Application</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="recon : ${recons}">
+                    <td th:text="${recon.id}"></td>
+                    <td th:text="${recon.name}"></td>
+                    <td th:text="${recon.action.application}"></td>
+                    <td>
+                        <span class="badge bg-info" th:text="${recon.action.type}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/recons/edit/{id}(id=${recon.id})}" class="btn btn-sm btn-warning">Edit</a>
+                        <a th:href="@{/admin/recons/delete/{id}(id=${recon.id})}" 
+                           class="btn btn-sm btn-danger" 
+                           onclick="return confirm('Are you sure you want to delete this recon?')">Delete</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recons)}">
+                    <td colspan="5" class="text-center">No recons configured yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

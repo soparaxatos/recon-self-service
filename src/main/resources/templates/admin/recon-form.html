@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title th:text="${recon.id == null ? 'New Recon' : 'Edit Recon'}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/admin/recons}">Manage Recons</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${recon.id == null ? 'New Recon' : 'Edit Recon'}"></li>
+        </ol>
+    </nav>
+
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0" th:text="${recon.id == null ? 'Create New Recon' : 'Edit Recon: ' + recon.name}"></h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/recons/save}" th:object="${recon}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{action.id}">
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Recon Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="001_MY_RECON" required>
+                        <div class="form-text">Standard format: [0-9]{3}_NAME</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" th:field="*{description}" required>
+                    </div>
+                </div>
+
+                <h5 class="mt-4 mb-3">Action Configuration</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="application" class="form-label">Target Application</label>
+                        <select class="form-select" id="application" th:field="*{action.application}" required>
+                            <option value="">Select Application...</option>
+                            <option value="db-extractor">db-extractor (REST)</option>
+                            <option value="app-file-exporter">app-file-exporter (Command Line)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="type" class="form-label">Action Type</label>
+                        <select class="form-select" id="type" th:field="*{action.type}" required>
+                            <option th:each="type : ${actionTypes}" th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="parameters" class="form-label">Parameters (JSON or Command Template)</label>
+                    <textarea class="form-control" id="parameters" th:field="*{action.parameters}" rows="8" required 
+                              placeholder='For REST: {"name": "..."} &#10;For Command: java -jar app.jar {cmd} {date}'></textarea>
+                    <div class="form-text">Use <code>{date}</code> as a placeholder for the execution date.</div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Save Recon</button>
+                    <a th:href="@{/admin/recons}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

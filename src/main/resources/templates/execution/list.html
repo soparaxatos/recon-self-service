@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Executions History</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Execution History</h1>
+        </div>
+        <div class="col-md-4">
+            <form th:action="@{/executions}" method="get" class="d-flex">
+                <input class="form-control me-2" type="search" name="query" th:value="${query}" placeholder="Filter by Recon name..." aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Filter</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Executed At</th>
+                    <th>Recon Name</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="exec : ${executions.content}">
+                    <td th:text="${exec.id}"></td>
+                    <td th:text="${#temporals.format(exec.executedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${exec.recon.name}"></td>
+                    <td th:text="${exec.userName}"></td>
+                    <td>
+                        <span class="badge" th:classappend="${exec.status.name() == 'SUCCESS' ? 'bg-success' : 'bg-danger'}" th:text="${exec.status}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{/executions/{id}(id=${exec.id})}" class="btn btn-sm btn-info text-white">View</a>
+                        <a th:if="${exec.responseData != null}" th:href="@{/executions/{id}/download(id=${exec.id})}" class="btn btn-sm btn-success">Download</a>
+                    </td>
+                </tr>
+                <tr th:if="${executions.totalElements == 0}">
+                    <td colspan="6" class="text-center">No executions found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav th:if="${executions.totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${executions.first ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/executions(page=${executions.number - 1}, query=${query}, sort=${sort}, dir=${dir})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, executions.totalPages - 1)}" th:classappend="${executions.number == i ? 'active' : ''}">
+                <a class="page-link" th:href="@{/executions(page=${i}, query=${query}, sort=${sort}, dir=${dir})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${executions.last ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/executions(page=${executions.number + 1}, query=${query}, sort=${sort}, dir=${dir})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

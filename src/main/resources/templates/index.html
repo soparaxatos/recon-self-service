@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Available Recons</h1>
+        </div>
+        <div class="col-md-4">
+            <form th:action="@{/}" method="get" class="d-flex">
+                <input class="form-control me-2" type="search" name="query" th:value="${query}" placeholder="Search recons..." aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="recon : ${recons}">
+            <div class="card h-100 recon-card" th:onclick="|window.location.href='@{/recons/{id}/execute(id=${recon.id})}'|">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${recon.name}">001_SAMPLE_RECON</h5>
+                    <p class="card-text text-muted" th:text="${recon.description}">Description goes here...</p>
+                    <div class="mt-3">
+                        <span class="badge bg-primary" th:text="${recon.action.application}">db-extractor</span>
+                        <span class="badge bg-secondary" th:text="${recon.action.type}">REST</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a th:href="@{/recons/{id}/execute(id=${recon.id})}" class="btn btn-sm btn-primary">Select Recon</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(recons)}">
+            <p class="lead">No recons found.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
