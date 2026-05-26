@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Execute Recon</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Execute Recon</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Recon Execution: <span th:text="${recon.name}"></span></h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h6>Description</h6>
+                        <p class="text-muted" th:text="${recon.description}"></p>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>Application</h6>
+                            <input type="text" class="form-control" th:value="${recon.action.application}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Type</h6>
+                            <input type="text" class="form-control" th:value="${recon.action.type}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6>Parameters Template</h6>
+                        <pre class="bg-light p-3 rounded" th:text="${recon.action.parameters}"></pre>
+                    </div>
+
+                    <hr>
+
+                    <form th:action="@{/recons/execute}" th:object="${executionRequest}" method="post">
+                        <input type="hidden" th:field="*{reconId}">
+                        
+                        <div class="mb-3">
+                            <label for="executionDate" class="form-label">Execution Date</label>
+                            <input type="date" class="form-control" id="executionDate" th:field="*{executionDate}" required>
+                            <div class="form-text">Select the reference date for this recon execution.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">Generate Recon</button>
+                            <a th:href="@{/}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

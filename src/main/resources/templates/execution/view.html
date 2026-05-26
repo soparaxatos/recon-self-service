@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Execution Details</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/executions}">Executions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Details</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center" 
+             th:classappend="${execution.status.name() == 'SUCCESS' ? 'bg-success text-white' : 'bg-danger text-white'}">
+            <h4 class="mb-0">Execution #<span th:text="${execution.id}"></span> - <span th:text="${execution.status}"></span></h4>
+            <span th:text="${#temporals.format(execution.executedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6>Recon</h6>
+                    <p class="lead" th:text="${execution.recon.name}"></p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h6>User</h6>
+                    <p class="lead" th:text="${execution.userName}"></p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h6>User Parameters</h6>
+                <pre class="bg-light p-2 rounded" th:text="${execution.userParameters}"></pre>
+            </div>
+
+            <div class="mb-4">
+                <h6>Response Message</h6>
+                <div class="alert" th:classappend="${execution.status.name() == 'SUCCESS' ? 'alert-success' : 'alert-danger'}" 
+                     th:text="${execution.responseMessage}"></div>
+            </div>
+
+            <div class="mb-4" th:if="${execution.responseData != null}">
+                <h6>Output Preview (First 1000 chars)</h6>
+                <pre class="bg-dark text-light p-3 rounded" style="max-height: 300px; overflow-y: auto;" 
+                     th:text="${#strings.abbreviate(new java.lang.String(execution.responseData), 1000)}"></pre>
+                
+                <div class="mt-3">
+                    <a th:href="@{/executions/{id}/download(id=${execution.id})}" class="btn btn-primary">Download Full Result</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/recons/{id}/execute(id=${execution.recon.id})}" class="btn btn-outline-primary">Run Again</a>
+            <a th:href="@{/executions}" class="btn btn-outline-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
